@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Fraud Detection Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <div class="flex-fill p-4 text-white">
+
+        <h2 class="mb-4">Fraud Detection Dashboard</h2>
+
+        <!-- SUMMARY CARDS -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card p-3 text-center shadow border-primary bg-dark text-white">
+                    <h5>Total Transactions</h5>
+                    <h3 th:text="${totalTransactions}">0</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 text-center shadow border-danger bg-dark text-white">
+                    <h5>Fraud Detected</h5>
+                    <h3 class="text-danger" th:text="${fraudCount}">0</h3>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 text-center shadow border-success bg-dark text-white">
+                    <h5>Safe Transactions</h5>
+                    <h3 class="text-success" th:text="${safeCount}">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD FORM -->
+        <div class="card p-4 shadow mb-4 bg-dark text-white">
+            <h4>Add New Transaction</h4>
+
+            <form th:action="@{/transaction/create}" method="post" class="row g-3">
+
+                <div class="col-md-3">
+                    <label class="form-label">Account Number</label>
+                    <input type="text"
+                           name="accountNumber"
+                           class="form-control"
+                           placeholder="ABCD1A2F"
+                           pattern="^[A-Za-z]{4}[A-Fa-f0-9]{4}$"
+                           required>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Amount</label>
+                    <input type="number"
+                           step="0.01"
+                           name="amount"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Location</label>
+                    <input type="text"
+                           name="location"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label">Risk Score</label>
+                    <input type="number"
+                           name="riskScore"
+                           class="form-control"
+                           min="0"
+                           max="100"
+                           required>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit"
+                            class="btn btn-primary w-100">
+                        Add
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card p-4 shadow bg-dark text-white">
+            <h4>All Transactions</h4>
+
+            <table class="table table-bordered table-hover mt-3 table-dark">
+
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Account</th>
+                    <th>Amount</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Risk</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="txn : ${transactions}"
+                    th:classappend="${txn.status == 'FRAUD' ? 'table-danger' :
+                                     (txn.status == 'SUSPICIOUS' ? 'table-warning' : 'table-success')}">
+
+                    <td th:text="${txn.id}"></td>
+                    <td th:text="${txn.accountNumber}"></td>
+                    <td th:text="${txn.amount}"></td>
+                    <td th:text="${txn.location}"></td>
+                    <td th:text="${txn.status}"></td>
+                    <td th:text="${txn.riskScore}"></td>
+                    <td th:text="${txn.transactionTime}"></td>
+
+                    <td>
+                        <a th:href="@{/transaction/delete/{id}(id=${txn.id})}"
+                           class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    </td>
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

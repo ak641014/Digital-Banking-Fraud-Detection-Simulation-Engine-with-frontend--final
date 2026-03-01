@@ -1,0 +1,27 @@
+body {
+    background: linear-gradient(to right, #141e30, #243b55);
+}
+
+#sidebar {
+    width: 250px;
+    min-height: 100vh;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+#main-content {
+    width: 100%;
+    color: white;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+button {
+    border-radius: 8px;
+}
